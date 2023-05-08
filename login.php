@@ -2,7 +2,7 @@
 //cel apakah tombol submit sdh di tekan atau belum
 if(isset( $_POST["submit"])){
 //cek username dan password
-if( $_POST["username"] == "eliazer" && $_POST["password"] == "123"){
+if( $_POST["username"] == "diazmdst" && $_POST["password"] == "2712"){
 //jika benar redirect ke halaman admin
 header("Location:admin.php");
 exit;

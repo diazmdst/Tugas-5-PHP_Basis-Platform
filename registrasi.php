@@ -1,56 +1,18 @@
 <?php
-session_start();
 require 'function.php';
+if(isset($_POST["register"])){
 
-//cek cookie
-if (isset($_COOKIE['id' && isset($_COOKIE['key'])])) {
-    $id = $_COOKIE['id'];
-    $key = $_COOKIE['key'];
-
-    //ambil user name berdasarkan id
-    $result = mysqli_query($conn, "SELECT username FROM user WHERE id = '$id'");
-    $row = mysqli_fetch_assoc($result);
-
-    //cek cookie dan username
-    if ($key === hash('sha256', $row['username'])) {
-        $_SESSION['login'] = true;
+    if(registrasi($_POST) > 0){
+        echo"<script>
+        alert('User berhasil ditambah')
+        </script>";
+    }else{
+        echo mysqli_error($conn);
     }
+
 }
-
-//cek session
-if (isset($_SESSION["login"])) {
-    header("location: index.php");
-}
-
-if (isset($_POST["login"])) {
-    $username = $_POST["username"];
-    $password = $_POST["password"];
-
-    $result = mysqli_query($conn, "SELECT * FROM user WHERE username = '$username'");
-
-    //cek username
-    if (mysqli_num_rows($result) === 1) {
-        //cek passowrd
-        $row = mysqli_fetch_assoc($result);
-        if (password_verify($password, $row["password"])) {
-            //set session
-            $_SESSION["login"] = true;
-
-            //cek remember me
-            if (isset($_POST['remember'])) {
-                //buat cookie
-                setcookie('id', $row['id'], time() + 60);
-                setcookie('key', hash('sha256', $row['username'], time() + 60));
-            }
-
-            header("location: index.php");
-            exit;
-        }
-    }
-    $error = true;
-}
-
 ?>
+
 
 
 <!DOCTYPE html>
@@ -62,7 +24,7 @@ if (isset($_POST["login"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>LOGIN</title>
+    <title>Sign Up!</title>
     <link href="css/style.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 </head>
@@ -76,7 +38,7 @@ if (isset($_POST["login"])) {
                         <div class="col-lg-5">
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
                                 <div class="card-header">
-                                    <h3 class="text-center font-weight-light my-4">Login</h3>
+                                    <h3 class="text-center font-weight-light my-4">Sign up!</h3>
                                     <h4 class="text-center font-weight-light"></h4>
                                 </div>
                                 <div class="card-body">
@@ -84,7 +46,7 @@ if (isset($_POST["login"])) {
                                     <?php if (isset($error)) :  ?>
                                         <script>
                                             alert('username / password salah')
-                                        </script>
+                                        </script>";
                                     <?php endif; ?>
 
                                     <form method="POST">
@@ -96,19 +58,20 @@ if (isset($_POST["login"])) {
                                             <input class="form-control" id="inputPassword" name="password" type="password" placeholder="Password" required />
                                             <label for="inputPassword">Password</label>
                                         </div>
-                                                                                
-                                            <input type="checkbox" name="remember" id="password">
-                                            <label for="remember">Remember Me</label>                                        
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="inputPassword" name="password2" type="password" placeholder="Password" required />
+                                            <label for="inputPassword">Confirm Password</label>
+                                        </div>
 
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                            <button type="submit" name="login" class="btn btn-primary">Login</button>
+                                            <button type="submit" name="register" class="btn btn-primary">Create</button>
                                         </div>
                                     </form>
 
 
                                 </div>
                                 <div class="card-footer text-center py-3">
-                                    <div class="small"><a href="registrasi.php">Need an account? Sign up!</a></div>
+                                    <div class="small"><a href="login.php">Have an account? Sign in!</a></div>
                                 </div>
                             </div>
                         </div>
